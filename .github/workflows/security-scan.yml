@@ -1,0 +1,85 @@
+name: Security Scan
+
+on:
+  workflow_dispatch:
+#   push:
+#     branches:
+#       - main
+
+jobs:
+  snyk_scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install Snyk CLI
+      run: npm install -g snyk
+        
+    - name: Authenticate with Snyk
+      run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+    - name: Run Snyk scan and save JSON report
+      run: |
+        snyk test --json > snyk_results.json || true
+        sleep 10
+    
+    - name: Upload Snyk results
+      uses: actions/upload-artifact@v3
+      with:
+        name: snyk-results
+        path: snyk_results.json
+
+  # codeql_scan:
+  #   name: Analyze (${{ matrix.language }})
+  #   runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+  #   timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+  #   permissions:
+      
+  #     security-events: write
+  #     packages: read
+  #     actions: read
+  #     contents: read
+
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #       - language: java-kotlin
+  #         build-mode: manual
+  #       - language: javascript-typescript
+  #         build-mode: none
+          
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v4
+
+  #   - name: Initialize CodeQL
+  #     uses: github/codeql-action/init@v3
+  #     with:
+  #       languages: ${{ matrix.language }}
+  #       build-mode: ${{ matrix.build-mode }}
+  #       queries: security-extended,security-and-quality
+        
+  #   - if: matrix.build-mode == 'manual'
+  #     shell: bash
+  #     run: mvm -B clean package
+      
+
+  #   - name: Perform CodeQL Analysis
+  #     uses: github/codeql-action/analyze@v3
+  #     with:
+  #       category: "/language:${{matrix.language}}"
+  #       output: codeql-results.sarif
+
+  #   - name: Install SARIF to JSON converter
+  #     run: npm install -g sarif-to-json
+        
+  #   - name: Convert SARIF to JSON
+  #     run: sarif-to-json codeql-results.sarif > codeql-results.json
+
+  #   - name: Upload CodeQL results
+  #     uses: actions/upload-artifact@v3
+  #     with:
+  #       name: codeql-results
+  #       path: codeql-results.json
