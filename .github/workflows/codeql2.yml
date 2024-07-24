@@ -48,4 +48,17 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
-        category: "/language:${{matrix.language}}" 
+        category: "/language:${{matrix.language}}"
+        output: codeql-results.sarif
+
+    - name: Install SARIF to JSON converter
+      run: npm install -g sarif-to-json
+
+    - name: Convert SARIF to JSON
+      run: sarif-to-json codeql-results.sarif > codeql-results.json
+
+    - name: Upload CodeQL results
+      uses: actions/upload-artifact@v3
+      with:
+        name: codeql-results
+        path: codeql-results.json
