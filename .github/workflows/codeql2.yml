@@ -51,11 +51,10 @@ jobs:
         category: "/language:${{matrix.language}}"
         output: codeql-results.sarif
 
-    - name: Install SARIF to JSON converter
-      run: npm install -g sarif-to-json
-
     - name: Convert SARIF to JSON
-      run: sarif-to-json codeql-results.sarif > codeql-results.json
+      run: |
+        pip install sarif-tools
+        sarif_to_json codeql-results.sarif > codeql-results.json
 
     - name: Upload CodeQL results
       uses: actions/upload-artifact@v3
