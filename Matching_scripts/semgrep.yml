@@ -1,0 +1,19 @@
+rules:
+- id: duplicate-finding-snyk-codeql
+  message: Duplicate vulnerability found by both Snyk and CodeQL
+  severity: WARNING
+  pattern-either:
+    - pattern-inside: snyk-results.json
+      pattern: vulnerabilities[].title
+      # This assumes Snyk titles (e.g., "Denial of Service (DoS)") are somewhat similar to CodeQL descriptions.
+    - pattern-inside: codeql-results.json
+      pattern: description
+      
+- id: duplicate-finding-snyk-codeql-file-and-line
+  message: Duplicate vulnerability found by both Snyk and CodeQL (file and line match)
+  severity: WARNING
+  pattern-and: 
+    - pattern-inside: snyk-results.json
+      pattern: vulnerabilities[].moduleName
+    - pattern-inside: codeql-results.json
+      pattern: location.path
