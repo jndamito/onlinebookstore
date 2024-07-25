@@ -98,12 +98,12 @@ jobs:
 
       - name: Compare and Consolidate Results
         run: |
-          semgrep --config semgrep.yml \
+          semgrep --config ./Matching_scripts/semgrep.yml \
                   snyk-results.json codeql-results.json \
                   --json --output results_comparison.json
 
       - name: Process Comparison Results
-        run: python process_results.py results_comparison.json
+        run: python ./Matching_scripts/process_results.py results_comparison.json
 
       - name: Upload Consolidated Results
         uses: actions/upload-artifact@v3
