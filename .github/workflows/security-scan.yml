@@ -105,12 +105,17 @@ jobs:
         run: |
           pip install semgrep
           pip install -r Matching_scripts/requirements.txt
-
+          
+      - name: Run Semgrep Analysis
+        run: |
+          semgrep --config ./Matching_scripts/semgrep.yml snyk-results.json codeql-results.json --json --output results_comparison.json --metrics=off
+        continue-on-error: true
+        
       - name: Compare and Consolidate Results
         run: |
-          semgrep --config ./Matching_scripts/semgrep.yml \
+          semgrep --config ./Matching_scripts/semgrep.yml --metrics=off \
                   snyk-results.json codeql-results.json \
-                  --json --output results_comparison.json --metrics=off
+                  --json --output results_comparison.json
 
       - name: Process Comparison Results
         run: python ./Matching_scripts/process_results.py results_comparison.json
