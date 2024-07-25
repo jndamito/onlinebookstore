@@ -52,16 +52,16 @@ jobs:
         output: codeql-results.sarif
         
     - name: Debug - List files
-      run: ls -la
+      run: ls -la ./codeql-results.sarif
       
-    - name: Convert SARIF to JSON
-      run: |
-        wget -O sarif-converter https://gitlab.com/ignis-build/sarif-converter/-/releases/permalink/latest/downloads/bin/sarif-converter-linux
-        chmod +x sarif-converter
-        ./sarif-converter --type codequality codeql-results.sarif codeql-results.json
+    # - name: Convert SARIF to JSON
+    #   run: |
+    #     wget -O sarif-converter https://gitlab.com/ignis-build/sarif-converter/-/releases/permalink/latest/downloads/bin/sarif-converter-linux
+    #     chmod +x sarif-converter
+    #     ./sarif-converter --type codequality codeql-results.sarif codeql-results.json
 
-    - name: Upload CodeQL results
-      uses: actions/upload-artifact@v3
-      with:
-        name: codeql-results
-        path: codeql-results.json
+    # - name: Upload CodeQL results
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: codeql-results
+    #     path: codeql-results.json
