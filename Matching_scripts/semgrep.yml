@@ -38,13 +38,3 @@ rules:
         pattern: 'vulnerability.title: ".*Resource Leak.*"'
       - pattern-inside: codeql-results.json
         pattern: '$.check_name: ".*resource-leak.*"'
-
-  - id: duplicate-finding-uncaught-exception
-    message: Duplicate uncaught exception found by Snyk and CodeQL
-    severity: WARNING
-    languages: [json]  # Semgrep will apply this rule to JSON files
-    patterns:
-      - pattern-inside: snyk-results.json
-        pattern: 'vulnerability.title: ".*Uncaught Exception.*"'
-      - pattern-inside: codeql-results.json
-        pattern: '$.check_name: ".*uncaught-.*exception.*"'
