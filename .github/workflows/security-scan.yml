@@ -93,10 +93,15 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
       - name: Install Semgrep
         run: |
           pip install semgrep
-          pip install -r ./Matching_scripts/requirements.txt
+          pip install -r Matching_scripts/requirements.txt
 
       - name: Compare and Consolidate Results
         run: |
