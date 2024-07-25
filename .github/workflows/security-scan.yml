@@ -90,6 +90,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [snyk_scan, code-ql-analyze]  # Depends on both scans
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
       - name: Download Artifacts
         uses: actions/download-artifact@v3
 
