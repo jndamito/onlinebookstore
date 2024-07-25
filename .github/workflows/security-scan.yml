@@ -108,7 +108,7 @@ jobs:
         
       - name: Compare and Consolidate Results
         run: |
-          semgrep --metrics=off snyk-results.json codeql-results.json
+          semgrep --metrics=on snyk-results.json codeql-results.json
           # semgrep --config=Matching_scripts/semgrep.yml snyk-results.json codeql-results.json
           
           # semgrep --metrics off --config Matching_scripts/semgrep.yml \
