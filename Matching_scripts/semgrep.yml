@@ -2,6 +2,8 @@ rules:
 - id: duplicate-finding-stack-trace
   message: Duplicate stack trace exposure found by Snyk and CodeQL
   severity: WARNING
+  languages:
+    - json  # Semgrep will apply this rule to JSON files
   pattern-either:
     - pattern-inside: snyk-results.json
       pattern: vulnerability.title
@@ -13,6 +15,8 @@ rules:
 - id: duplicate-finding-trust-boundary
   message: Duplicate trust boundary violation found by Snyk and CodeQL
   severity: WARNING
+  languages:
+    - json  # Semgrep will apply this rule to JSON files
   pattern-either:
     - pattern-inside: snyk-results.json
       pattern: vulnerability.title
@@ -24,6 +28,8 @@ rules:
 - id: duplicate-finding-null-dereference
   message: Duplicate null dereference found by Snyk and CodeQL
   severity: WARNING
+  languages:
+    - json  # Semgrep will apply this rule to JSON files
   pattern-either:
     - pattern-inside: snyk-results.json
       pattern: vulnerability.title
@@ -32,10 +38,12 @@ rules:
       pattern: $.check_name
       regex: '.*dereferenced-value.*'
 
-# Rules for Resource Leaks
+# New Rules for Resource Leaks
 - id: duplicate-finding-resource-leak
   message: Duplicate resource leak found by Snyk and CodeQL
   severity: WARNING
+  languages:
+    - json  # Semgrep will apply this rule to JSON files
   pattern-either:
     - pattern-inside: snyk-results.json
       pattern: vulnerability.title
@@ -44,10 +52,12 @@ rules:
       pattern: $.check_name
       regex: '.*resource-leak.*'  
 
-# Rules for Uncaught Exceptions
+# New Rules for Uncaught Exceptions
 - id: duplicate-finding-uncaught-exception
   message: Duplicate uncaught exception found by Snyk and CodeQL
   severity: WARNING
+  languages:
+    - json  # Semgrep will apply this rule to JSON files
   pattern-either:
     - pattern-inside: snyk-results.json
       pattern: vulnerability.title
