@@ -108,7 +108,7 @@ jobs:
         
       - name: Compare and Consolidate Results
         run: |
-          semgrep snyk-results.json codeql-results.json --json --output results_comparison.json
+          semgrep snyk-results.json codeql-results.json --json --output results_comparison.json --metrics=auto
 
       - name: Process Comparison Results
         run: python ./Matching_scripts/process_results.py results_comparison.json
