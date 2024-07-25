@@ -56,7 +56,9 @@ jobs:
       
     - name: Convert SARIF to JSON
       run: |
-        jq . codeql-results.sarif > codeql-results.json
+        wget -O sarif-converter https://gitlab.com/ignis-build/sarif-converter/-/releases/permalink/latest/downloads/bin/sarif-converter-linux
+        chmod +x sarif-converter
+        ./sarif-converter --type codequality codeql-results.sarif codeql-results.json
 
     - name: Upload CodeQL results
       uses: actions/upload-artifact@v3
