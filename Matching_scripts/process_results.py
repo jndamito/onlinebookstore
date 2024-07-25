@@ -4,36 +4,36 @@ def mark_duplicates(semgrep_results_file):
     with open(semgrep_results_file, "r") as f:
         semgrep_results = json.load(f)
 
-    duplicates_by_path_and_line = set()  # Store duplicates with file and line
-    duplicates_by_title = set()          # Store duplicates with matching titles/descriptions
-
+    duplicates = {}  # Map check_name to set of file paths
     for result in semgrep_results["results"]:
         if len(result["extra"]["lines"]) > 1:
-            # Check if it's a file and line match
-            snyk_finding, codeql_finding = result["extra"]["lines"]
-            if snyk_finding["source"] == "snyk-results.json" and codeql_finding["source"] == "codeql-results.json":
-                snyk_path = snyk_finding["path"].split(":")[-1]  # Extract module path
-                if snyk_path == codeql_finding["path"]:
-                    duplicates_by_path_and_line.add(snyk_path)  # Use Snyk path as key
+            duplicates.setdefault(result["extra"]["metadata"]["check_name"], set()).add(result["extra"]["lines"][0]["path"])
 
-            # Check if it's a title/description match
-            if result["check_id"] == "duplicate-finding-snyk-codeql":
-                duplicates_by_title.add(snyk_finding["path"]) # Use Snyk path as key
+    with open("snyk-results.json", "r") as f:
+        snyk_results = json.load(f)
 
-    with open("codeql-results.json", "r") as f:
-        codeql_results = json.load(f)
+    for vuln in snyk_results["vulnerabilities"]:
+        for file_path in vuln["from"]:
+            for check_name, paths in duplicates.items():
+                if file_path in paths:
+                    vuln["identifiers"].append({"type": "CWE", "value": "Duplicate"})
+                    vuln["severity"] = "critical"  
+                    break  # No need to check other checks
 
-    # Mark duplicates in CodeQL results
-    for finding in codeql_results:
-        path = finding["location"]["path"]
-        if path in duplicates_by_path_and_line or path in duplicates_by_title:
-            finding["severity"] = "error"
-            finding["confirmation"] = "Confirmed by Snyk"
+    # Add unique CodeQL issues not matched by Semgrep
+    for item in json.load(open("codeql-results.json")):
+        if item['check_name'] not in duplicates:
+            snyk_results["vulnerabilities"].append({
+                "id": f"CodeQL-{item['check_name']}",
+                "title": item['check_name'],
+                "description": item['description'],
+                "severity": item['severity'],
+                "packageName": "N/A",
+                "version": "N/A",
+                "from": ["N/A"],
+                "upgradePath": [],
+                "identifiers": [{"type": "CWE", "value": "CodeQL"}]
+            })
 
     with open("consolidated_results.json", "w") as f:
-        json.dump(codeql_results, f, indent=2)
-
-
-if __name__ == "__main__":
-    import sys
-    mark_duplicates(sys.argv[1])
+        json.dump(snyk_results, f, indent=2)
