@@ -110,7 +110,7 @@ jobs:
         run: |
           semgrep --config=Matching_scripts/semgrep.yml \
                   snyk-results.json codeql-results.json \
-                  --json --output results_comparison.json
+                  --json --output results_comparison.json --metrics=off
 
       - name: Process Comparison Results
         run: python ./Matching_scripts/process_results.py results_comparison.json
