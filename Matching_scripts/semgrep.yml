@@ -57,11 +57,11 @@ rules:
   message: Duplicate uncaught exception found by Snyk and CodeQL
   severity: WARNING
   languages:
-    - json  # Semgrep will apply this rule to JSON files
+    - json
   pattern-either:
     - pattern-inside: snyk-results.json
       pattern: vulnerability.title
       regex: '.*Uncaught Exception.*'
     - pattern-inside: codeql-results.json
       pattern: $.check_name
-      regex: '.*uncaught-.*exception.*' # Broad pattern for uncaught exceptions
+      pattern-regex: '.*uncaught-.*exception.*'  # Use pattern-regex for regex
