@@ -94,7 +94,9 @@ jobs:
         uses: actions/download-artifact@v3
 
       - name: Install Semgrep
-        run: pip install semgrep
+        run: |
+          pip install semgrep
+          pip install -r ./Matching_scripts/requirements.txt
 
       - name: Compare and Consolidate Results
         run: |
