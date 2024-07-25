@@ -1,19 +1,57 @@
 rules:
-- id: duplicate-finding-snyk-codeql
-  message: Duplicate vulnerability found by both Snyk and CodeQL
+- id: duplicate-finding-stack-trace
+  message: Duplicate stack trace exposure found by Snyk and CodeQL
   severity: WARNING
   pattern-either:
     - pattern-inside: snyk-results.json
-      pattern: vulnerabilities[].title
-      # This assumes Snyk titles (e.g., "Denial of Service (DoS)") are somewhat similar to CodeQL descriptions.
+      pattern: vulnerability.title
+      regex: '.*Stack Trace.*'
     - pattern-inside: codeql-results.json
-      pattern: description
-      
-- id: duplicate-finding-snyk-codeql-file-and-line
-  message: Duplicate vulnerability found by both Snyk and CodeQL (file and line match)
+      pattern: $.check_name
+      regex: '.*stack-trace.*'
+
+- id: duplicate-finding-trust-boundary
+  message: Duplicate trust boundary violation found by Snyk and CodeQL
   severity: WARNING
-  pattern-and: 
+  pattern-either:
     - pattern-inside: snyk-results.json
-      pattern: vulnerabilities[].moduleName
+      pattern: vulnerability.title
+      regex: '.*Trust Boundary Violation.*'
     - pattern-inside: codeql-results.json
-      pattern: location.path
+      pattern: $.check_name
+      regex: '.*trust-boundary.*'
+
+- id: duplicate-finding-null-dereference
+  message: Duplicate null dereference found by Snyk and CodeQL
+  severity: WARNING
+  pattern-either:
+    - pattern-inside: snyk-results.json
+      pattern: vulnerability.title
+      regex: '.*Null Dereference.*'
+    - pattern-inside: codeql-results.json
+      pattern: $.check_name
+      regex: '.*dereferenced-value.*'
+
+# Rules for Resource Leaks
+- id: duplicate-finding-resource-leak
+  message: Duplicate resource leak found by Snyk and CodeQL
+  severity: WARNING
+  pattern-either:
+    - pattern-inside: snyk-results.json
+      pattern: vulnerability.title
+      regex: '.*Resource Leak.*'
+    - pattern-inside: codeql-results.json
+      pattern: $.check_name
+      regex: '.*resource-leak.*'  
+
+# Rules for Uncaught Exceptions
+- id: duplicate-finding-uncaught-exception
+  message: Duplicate uncaught exception found by Snyk and CodeQL
+  severity: WARNING
+  pattern-either:
+    - pattern-inside: snyk-results.json
+      pattern: vulnerability.title
+      regex: '.*Uncaught Exception.*'
+    - pattern-inside: codeql-results.json
+      pattern: $.check_name
+      regex: '.*uncaught-.*exception.*' # Broad pattern for uncaught exceptions
