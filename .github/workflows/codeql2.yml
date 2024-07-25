@@ -53,12 +53,13 @@ jobs:
 
     - name: Convert SARIF to JSON
       run: |
-        python3 -c "
-        import json
-        with open('codeql-results.sarif', 'r') as sarif_file:
-        sarif_data = json.load(sarif_file)
-        with open('codeql-results.json', 'w') as json_file:
-        json.dump(sarif_data, json_file, indent=4)"
+                    python3 -c "
+            import json
+            with open('codeql-results.sarif', 'r') as sarif_file:
+                sarif_data = json.load(sarif_file)
+            with open('codeql-results.json', 'w') as json_file:
+                json.dump(sarif_data, json_file, indent=4)
+            "
 
     - name: Upload CodeQL results
       uses: actions/upload-artifact@v3
