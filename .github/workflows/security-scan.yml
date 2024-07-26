@@ -110,6 +110,7 @@ jobs:
         
       - name: Compare and Consolidate Results
         run: |
+          cat snyk-results/snyk-results.json
           semgrep --config ./Matching_scripts/semgrep.yml ./snyk-results/snyk-results.json ./codeql-results/codeql-results.json
           # semgrep --metrics off --config Matching_scripts/semgrep.yml \
           #         snyk-results.json codeql-results.json \
