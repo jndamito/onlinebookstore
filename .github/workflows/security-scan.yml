@@ -103,21 +103,21 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Semgrep
-        run: |
-          pip install semgrep
-          pip install -r Matching_scripts/requirements.txt
+      # - name: Install Semgrep
+      #   run: |
+      #     pip install semgrep
+      #     pip install -r Matching_scripts/requirements.txt
         
-      - name: Compare and Consolidate Results
-        run: |
-          semgrep --config ./Matching_scripts/semgrep.yml ./snyk-results/snyk_results.json ./codeql-results/codeql-results.json --json --output results_comparison.json
-          # semgrep --metrics off --config Matching_scripts/semgrep.yml \
-          #         snyk-results.json codeql-results.json \
-          #         --json --output results_comparison.json
+      # - name: Compare and Consolidate Results
+      #   run: |
+      #     semgrep --config ./Matching_scripts/semgrep.yml ./snyk-results/snyk_results.json ./codeql-results/codeql-results.json --json --output results_comparison.json
+      #     # semgrep --metrics off --config Matching_scripts/semgrep.yml \
+      #     #         snyk-results.json codeql-results.json \
+      #     #         --json --output results_comparison.json
 
       - name: Process Comparison Results
-        run: python ./Matching_scripts/process_results.py results_comparison.json
-
+        run: python ./Matching_scripts/compare_vulnerabilities.py
+        
       - name: Upload Consolidated Results
         uses: actions/upload-artifact@v3
         with:
