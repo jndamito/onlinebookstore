@@ -7,10 +7,12 @@ rules:
       {
         "vulnerabilities": [
           {
-            "title": ".*Stack Trace.*"
+            "title": "$T"
           }
         ]
       }
+    metavariable-regex:
+      $T: ".*Stack Trace.*"
 
   - id: codeql-stack-trace
     message: CodeQL Stack Trace Exposure
@@ -29,10 +31,12 @@ rules:
       {
         "vulnerabilities": [
           {
-            "title": ".*Trust Boundary Violation.*"
+            "title": "$T"
           }
         ]
       }
+    metavariable-regex:
+      $T: ".*Trust Boundary Violation.*"
 
   - id: codeql-trust-boundary
     message: CodeQL Trust Boundary Violation
@@ -51,10 +55,12 @@ rules:
       {
         "vulnerabilities": [
           {
-            "title": ".*Null Dereference.*"
+            "title": "$T"
           }
         ]
       }
+    metavariable-regex:
+      $T: ".*Null Dereference.*"
 
   - id: codeql-null-dereference
     message: CodeQL Null Dereference
@@ -73,10 +79,12 @@ rules:
       {
         "vulnerabilities": [
           {
-            "title": ".*Resource Leak.*"
+            "title": "$T"
           }
         ]
       }
+    metavariable-regex:
+      $T: ".*Resource Leak.*"
 
   - id: codeql-resource-leak
     message: CodeQL Resource Leak
@@ -95,10 +103,12 @@ rules:
       {
         "vulnerabilities": [
           {
-            "title": ".*Uncaught Exception.*"
+            "title": "$T"
           }
         ]
       }
+    metavariable-regex:
+      $T: ".*Uncaught Exception.*"
 
   - id: codeql-uncaught-exception
     message: CodeQL Uncaught Exception
