@@ -1,90 +1,110 @@
 rules:
-  - id: duplicate-finding-stack-trace
-    message: Duplicate stack trace exposure found by Snyk and CodeQL
+  - id: snyk-stack-trace
+    message: Snyk Stack Trace Exposure
     severity: WARNING
     languages: [json]
-    pattern-either:
-      - pattern: |
+    pattern: |
+      {
+        "vulnerabilities": [
           {
-            "vulnerabilities": [
-              {
-                "title": ".*Stack Trace.*"
-              }
-            ]
+            "title": ".*Stack Trace.*"
           }
-      - pattern: |
-          {
-            "check_name": "java/stack-trace-exposure"
-          }
+        ]
+      }
 
-  - id: duplicate-finding-trust-boundary
-    message: Duplicate trust boundary violation found by Snyk and CodeQL
+  - id: codeql-stack-trace
+    message: CodeQL Stack Trace Exposure
     severity: WARNING
     languages: [json]
-    pattern-either:
-      - pattern: |
-          {
-            "vulnerabilities": [
-              {
-                "title": ".*Trust Boundary Violation.*"
-              }
-            ]
-          }
-      - pattern: |
-          {
-            "check_name": "java/trust-boundary-violation"
-          }
+    pattern: |
+      {
+        "check_name": "java/stack-trace-exposure"
+      }
 
-  - id: duplicate-finding-null-dereference
-    message: Duplicate null dereference found by Snyk and CodeQL
+  - id: snyk-trust-boundary
+    message: Snyk Trust Boundary Violation
     severity: WARNING
     languages: [json]
-    pattern-either:
-      - pattern: |
+    pattern: |
+      {
+        "vulnerabilities": [
           {
-            "vulnerabilities": [
-              {
-                "title": ".*Null Dereference.*"
-              }
-            ]
+            "title": ".*Trust Boundary Violation.*"
           }
-      - pattern: |
-          {
-            "check_name": "java/dereferenced-value-may-be-null"
-          }
+        ]
+      }
 
-  - id: duplicate-finding-resource-leak
-    message: Duplicate resource leak found by Snyk and CodeQL
+  - id: codeql-trust-boundary
+    message: CodeQL Trust Boundary Violation
     severity: WARNING
     languages: [json]
-    pattern-either:
-      - pattern: |
-          {
-            "vulnerabilities": [
-              {
-                "title": ".*Resource Leak.*"
-              }
-            ]
-          }
-      - pattern: |
-          {
-            "check_name": "java/database-resource-leak"
-          }
+    pattern: |
+      {
+        "check_name": "java/trust-boundary-violation"
+      }
 
-  - id: duplicate-finding-uncaught-exception
-    message: Duplicate uncaught exception found by Snyk and CodeQL
+  - id: snyk-null-dereference
+    message: Snyk Null Dereference
     severity: WARNING
     languages: [json]
-    pattern-either:
-      - pattern: |
+    pattern: |
+      {
+        "vulnerabilities": [
           {
-            "vulnerabilities": [
-              {
-                "title": ".*Uncaught Exception.*"
-              }
-            ]
+            "title": ".*Null Dereference.*"
           }
-      - pattern: |
+        ]
+      }
+
+  - id: codeql-null-dereference
+    message: CodeQL Null Dereference
+    severity: WARNING
+    languages: [json]
+    pattern: |
+      {
+        "check_name": "java/dereferenced-value-may-be-null"
+      }
+
+  - id: snyk-resource-leak
+    message: Snyk Resource Leak
+    severity: WARNING
+    languages: [json]
+    pattern: |
+      {
+        "vulnerabilities": [
           {
-            "check_name": "java/uncaught-number-format-exception"
+            "title": ".*Resource Leak.*"
           }
+        ]
+      }
+
+  - id: codeql-resource-leak
+    message: CodeQL Resource Leak
+    severity: WARNING
+    languages: [json]
+    pattern: |
+      {
+        "check_name": "java/database-resource-leak"
+      }
+
+  - id: snyk-uncaught-exception
+    message: Snyk Uncaught Exception
+    severity: WARNING
+    languages: [json]
+    pattern: |
+      {
+        "vulnerabilities": [
+          {
+            "title": ".*Uncaught Exception.*"
+          }
+        ]
+      }
+
+  - id: codeql-uncaught-exception
+    message: CodeQL Uncaught Exception
+    severity: WARNING
+    languages: [json]
+    pattern: |
+      {
+        "check_name": "java/uncaught-number-format-exception"
+      }
