@@ -83,5 +83,5 @@ def main(snyk_path, codeql_path, output_path):
 if __name__ == '__main__':
     snyk_path = 'snyk-results/snyk_results.json'
     codeql_path = 'codeql-results/codeql-results.json'
-    output_path = 'results_comparison.json'
+    output_path = 'consolidated_results.json'
     main(snyk_path, codeql_path, output_path)
