@@ -1,0 +1,40 @@
+rules:
+  - id: duplicate-finding-stack-trace
+    message: Duplicate stack trace exposure found by Snyk and CodeQL
+    severity: WARNING
+    languages: [json]
+    pattern-either:
+      - pattern: '"vulnerability.title": ".*Stack Trace.*"'
+      - pattern: '"check_name": ".*stack-trace.*"'
+
+  - id: duplicate-finding-trust-boundary
+    message: Duplicate trust boundary violation found by Snyk and CodeQL
+    severity: WARNING
+    languages: [json]
+    pattern-either:
+      - pattern: '"vulnerability.title": ".*Trust Boundary Violation.*"'
+      - pattern: '"check_name": ".*trust-boundary.*"'
+
+  - id: duplicate-finding-null-dereference
+    message: Duplicate null dereference found by Snyk and CodeQL
+    severity: WARNING
+    languages: [json]
+    pattern-either:
+      - pattern: '"vulnerability.title": ".*Null Dereference.*"'
+      - pattern: '"check_name": ".*dereferenced-value.*"'
+
+  - id: duplicate-finding-resource-leak
+    message: Duplicate resource leak found by Snyk and CodeQL
+    severity: WARNING
+    languages: [json]
+    pattern-either:
+      - pattern: '"vulnerability.title": ".*Resource Leak.*"'
+      - pattern: '"check_name": ".*resource-leak.*"'
+
+  - id: duplicate-finding-uncaught-exception
+    message: Duplicate uncaught exception found by Snyk and CodeQL
+    severity: WARNING
+    languages: [json]
+    pattern-either:
+      - pattern: '"vulnerability.title": ".*Uncaught Exception.*"'
+      - pattern: '"check_name": ".*uncaught-.*exception.*"'
