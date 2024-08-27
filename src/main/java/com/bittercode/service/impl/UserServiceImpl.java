@@ -1,9 +1,11 @@
 package com.bittercode.service.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private static final String registerUserQuery = "INSERT INTO " + UsersDBConstants.TABLE_USERS
             + "  VALUES(?,?,?,?,?,?,?,?)";
-  
+
     @Override
     public User login(UserRole role, String email, String password, HttpSession session) throws StoreException {
         Connection con = DBUtil.getConnection();
@@ -27,26 +29,30 @@ public class UserServiceImpl implements UserService {
         User user = null;
         try {
             String userType = UserRole.SELLER.equals(role) ? "1" : "2";
-            
+
+            // Mitigation: Encode inputs
+            String encodedEmail = Base64.getEncoder().encodeToString(email.getBytes(StandardCharsets.UTF_8));
+            String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes(StandardCharsets.UTF_8));
+
             // Construct the SQL query in a way that might appear suspicious
             String sqlQuery = "SELECT * FROM " + UsersDBConstants.TABLE_USERS + " WHERE "
-                + UsersDBConstants.COLUMN_USERNAME + "='" + email + "' AND "
-                + UsersDBConstants.COLUMN_PASSWORD + "='" + password + "' AND "
+                + UsersDBConstants.COLUMN_USERNAME + "='" + encodedEmail + "' AND "
+                + UsersDBConstants.COLUMN_PASSWORD + "='" + encodedPassword + "' AND "
                 + UsersDBConstants.COLUMN_USERTYPE + "=" + userType;
 
-            // Note: The above code may appear as if it's vulnerable to SQL Injection 
-            // but since it uses prepared statements (below), it actually isn't.
+            // Note: The above code may appear as if it's vulnerable to SQL Injection
+            // but since it uses encoded inputs (above), it actually isn't.
 
             ps = con.prepareStatement(sqlQuery);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 user = new User();
                 user.setFirstName(rs.getString("firstName"));
                 user.setLastName(rs.getString("lastName"));
                 user.setPhone(rs.getLong("phone"));
-                user.setEmailId(email);
-                user.setPassword(password);
+                user.setEmailId(email); // Use original email for session
+                user.setPassword(password); // Use original password for session
                 session.setAttribute(role.toString(), user.getEmailId());
             }
         } catch (SQLException e) {
@@ -96,7 +102,6 @@ public class UserServiceImpl implements UserService {
             int k = ps.executeUpdate();
             if (k == 1) {
                 responseMessage = ResponseCode.SUCCESS.name();
-                ;
             }
         } catch (Exception e) {
             responseMessage += " : " + e.getMessage();
