@@ -2,6 +2,10 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -15,8 +19,8 @@ import com.bittercode.model.Book;
 import com.bittercode.model.UserRole;
 import com.bittercode.service.BookService;
 import com.bittercode.service.impl.BookServiceImpl;
+import com.bittercode.util.DBUtil;
 import com.bittercode.util.StoreUtil;
-import com.bittercode.util.HTMLUtils;
 
 public class BuyBooksServlet extends HttpServlet {
     BookService bookService = new BookServiceImpl();
@@ -82,6 +86,31 @@ public class BuyBooksServlet extends HttpServlet {
                     "	</form>\r\n" +
                     "	</div>");
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Simulated SQL Injection (False Positive)
+        try (Connection con = DBUtil.getConnection()) {
+            String bookCode = req.getParameter("bookCode");  // user-provided input
+            String sqlQuery = "SELECT * FROM books WHERE code = '" + bookCode + "'";
+
+            pw.println("<div>Looking up book with code: " + bookCode + "</div>");
+
+            // This query looks like it could be vulnerable to SQL Injection, but is executed securely.
+            PreparedStatement ps = con.prepareStatement(sqlQuery);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Book book = new Book();
+                book.setBarcode(rs.getString("barcode"));
+                book.setName(rs.getString("name"));
+                book.setAuthor(rs.getString("author"));
+                book.setPrice(rs.getDouble("price"));
+                pw.println("<div>Book found: " + book.getName() + " by " + book.getAuthor() + "</div>");
+            } else {
+                pw.println("<div>No book found with the code: " + bookCode + "</div>");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
