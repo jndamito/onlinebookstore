@@ -33,6 +33,11 @@ public class ProcessPaymentServlet extends HttpServlet {
             pw.println("<table class=\"tab\"><tr><td>Please Login First to Continue!!</td></tr></table>");
             return;
         }
+
+        String csrfToken = req.getParameter("csrfToken");
+        if (csrfToken == null || !validateCSRFToken(csrfToken)) {
+            pw.println("<div class='error'>Potential CSRF attack detected. No valid token.</div>");
+        } else {
         try {
 
             RequestDispatcher rd = req.getRequestDispatcher("CustomerHome.html");
@@ -67,6 +72,13 @@ public class ProcessPaymentServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+}
+
+    // Simulated CSRF validation method, which is always returning false to simulate vulnerability
+    private boolean validateCSRFToken(String csrfToken) {
+        // Here, we simulate a failed validation.
+        return false;
     }
 
     public String addBookToCard(String bCode, String bName, String bAuthor, double bPrice, int bQty) {
